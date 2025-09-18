@@ -122,14 +122,15 @@ singularity run --bind "$PWD":/workspace openworm.sif \
 
 
 # 1) Run via Singularity (preferred)
-python3 sibernetic_c302.py \
-  -noc302 -datareader MyWorm.muscles.dat -duration 5s \
-  --sif /path/to/openworm.sif
+mkdir -p ow_out
 
-# If your cluster has GPUs and the image supports them:
-python3 sibernetic_c302.py \
-  -noc302 -datareader MyWorm.muscles.dat -duration 5s \
-  --sif /path/to/openworm.sif --nv
+
+
+singularity exec --nv -e -B "$PWD:$PWD" --pwd /home/ow/sibernetic openworm.sif \
+  env DISPLAY="" XAUTHORITY="" \
+  python3 "$PWD/sibernetic_c302.py" \
+  -noc302 -datareader "$PWD/MyWorm.muscles.dat" \
+  -duration 5000 -device GPU -logstep 1000 -outDir "$PWD/ow_out"
 ```
 
 
