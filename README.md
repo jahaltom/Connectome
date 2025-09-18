@@ -106,6 +106,34 @@ Muscles: ['MDL01','MDL02',...,'MVR24']
 
 ---
 
+
+```
+git clone https://github.com/openworm/sibernetic.git
+cp sibernetic/sibernetic_c302.py .
+
+# 1) Pull the OpenWorm Docker image as a local Singularity image (SIF)
+singularity pull openworm.sif docker://openworm/openworm:latest
+
+# 2) Try to run the container's default runscript,
+#    passing your muscle file (bound at /workspace).
+#    This uses your local c302/ as /workspace inside the container.
+singularity run --bind "$PWD":/workspace openworm.sif \
+  -noc302 -datareader MyWorm.muscles.dat -duration 5.0
+
+
+# 1) Run via Singularity (preferred)
+python3 sibernetic_c302.py \
+  -noc302 -datareader MyWorm.muscles.dat -duration 5s \
+  --sif /path/to/openworm.sif
+
+# If your cluster has GPUs and the image supports them:
+python3 sibernetic_c302.py \
+  -noc302 -datareader MyWorm.muscles.dat -duration 5s \
+  --sif /path/to/openworm.sif --nv
+```
+
+
+
 ## 4️⃣ Run the simulation (headless) & inspect outputs
 
 Run **without GUI**:
