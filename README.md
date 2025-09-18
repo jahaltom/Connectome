@@ -131,6 +131,24 @@ singularity exec --nv -e -B "$PWD:$PWD" --pwd /home/ow/sibernetic openworm.sif \
   python3 "$PWD/sibernetic_c302.py" \
   -noc302 -datareader "$PWD/MyWorm.muscles.dat" \
   -duration 5000 -device GPU -logstep 1000 -outDir "$PWD/ow_out"
+
+
+# from the dir with openworm.sif + MyWorm.muscles.dat
+mkdir -p ow_out_gpu
+
+singularity exec --nv -e \
+  -B "$PWD:$PWD" \
+  --pwd /home/ow/sibernetic \
+  openworm.sif \
+  env DISPLAY="" XAUTHORITY="" \
+  python3 "$PWD/sibernetic_c302.py" \
+  -noc302 \
+  -datareader "$PWD/MyWorm.muscles.dat" \
+  -device GPU \
+  -duration 300 \
+  -dt 1e-5 \
+  -logstep 500 \
+  -outDir "$PWD/ow_out_gpu"
 ```
 
 
