@@ -106,45 +106,6 @@ Muscles: ['MDL01','MDL02',...,'MVR24']
 
 ---
 
-### 3c) Get the runner & image
-```
-git clone https://github.com/openworm/sibernetic.git
-cp sibernetic/sibernetic_c302.py .
-
-# Pull the OpenWorm Docker image as a local Singularity image (SIF)
-singularity pull openworm.sif docker://openworm/openworm:latest
-
-#Quick GPU sanity check (optional)
-singularity exec --nv -e openworm.sif nvidia-smi
-
-````
-
-
-
-### 3d) FAST preview run (recommended defaults)
-```
-mkdir -p ow_out
-
-
-
-singularity exec --nv -e -B "$PWD:$PWD" --pwd /home/ow/sibernetic openworm.sif \
-  env DISPLAY="" XAUTHORITY="" \
-  python3 "$PWD/sibernetic_c302.py" \
-  -noc302 -datareader "$PWD/MyWorm.muscles.dat" \
-  -duration 5000 -device GPU -logstep 1000 -outDir "$PWD/ow_out"
-
-```
-- noc302: use your existing *.muscles.dat (don’t simulate the neural model inside the container).
-
-- device GPU: force the GPU OpenCL device.
-
-- duration 300: simulate 300 ms.
-
-- dt 1e-5: larger physics step → far fewer steps (≈ 30k steps for 300 ms).
-
-- --pwd /home/ow/sibernetic: ensures the script’s src/main.cpp version check works.
-
-- env DISPLAY="" XAUTHORITY="": prevents a headless env crash.
 
 
 ## 4️⃣ Run the simulation (headless) & inspect outputs
@@ -177,6 +138,46 @@ plt.title("Muscle activation map"); plt.show()
 ```
 
 Look for alternating dorsal↔ventral bands and a head→tail phase progression.
+
+### Get the runner & image
+```
+git clone https://github.com/openworm/sibernetic.git
+cp sibernetic/sibernetic_c302.py .
+
+# Pull the OpenWorm Docker image as a local Singularity image (SIF)
+singularity pull openworm.sif docker://openworm/openworm:latest
+
+#Quick GPU sanity check (optional)
+singularity exec --nv -e openworm.sif nvidia-smi
+
+````
+
+
+
+### FAST preview run (recommended defaults)
+```
+mkdir -p ow_out
+
+
+
+singularity exec --nv -e -B "$PWD:$PWD" --pwd /home/ow/sibernetic openworm.sif \
+  env DISPLAY="" XAUTHORITY="" \
+  python3 "$PWD/sibernetic_c302.py" \
+  -noc302 -datareader "$PWD/MyWorm.muscles.dat" \
+  -duration 5000 -device GPU -logstep 1000 -outDir "$PWD/ow_out"
+
+```
+- noc302: use your existing *.muscles.dat (don’t simulate the neural model inside the container).
+
+- device GPU: force the GPU OpenCL device.
+
+- duration 300: simulate 300 ms.
+
+- dt 1e-5: larger physics step → far fewer steps (≈ 30k steps for 300 ms).
+
+- --pwd /home/ow/sibernetic: ensures the script’s src/main.cpp version check works.
+
+- env DISPLAY="" XAUTHORITY="": prevents a headless env crash.
 
 ---
 
